@@ -45,10 +45,14 @@ def est_debug():
     mappings = {
         "tweet": {
             "properties": {
-                "geo": {
-                    "properties": {
-                        "coordinates": {"type": "geo_point"}
-                    }
+                "id": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "geo_point"
+                },
+                "timestamp_ms": {
+                    "type": "string"
                 }
             }
         }
@@ -56,11 +60,11 @@ def est_debug():
     
 
     es = ElasticSearchForTweets().get_instance()
-    #es.indices.delete("twitter")
-    #es.indices.create(index="twitter")
-    #es.indices.put_mapping(index="twitter", doc_type="tweet", body=json.dumps(mappings))
-    #json_pretty_print(es.indices.get("twitter"))
-    #es.indices.put_mapping(index="twitter", doc_type="tweet", body=json.dumps(mappings))
+    es.indices.delete("twitter")
+    es.indices.create(index="twitter")
+    es.indices.put_mapping(index="twitter", doc_type="tweet", body=json.dumps(mappings))
+    json_pretty_print(es.indices.get("twitter"))
+
 
 # TODO: remove
 #est_debug()
