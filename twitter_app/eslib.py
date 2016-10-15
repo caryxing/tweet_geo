@@ -58,27 +58,27 @@ class ElasticSearchForTweets:
             }
         }
         indices = self.es.indices.get(INDEX_PREFIX + "*")
-        indexSeqs = []
+        index_seqs = []
         for index in indices:
-            indexSeqs.append(int(index.split('-')[1]))
-        indexSeqs.sort(reverse=True)
+            index_seqs.append(int(index.split('-')[1]))
+        index_seqs.sort(reverse=True)
 
         # remove indices that are older than 24 hours
-        for i in xrange(24, len(indexSeqs)):
-            self.es.indices.delete(index = INDEX_PREFIX + str(indexSeqs[i]))
+        for i in xrange(24, len(index_seqs)):
+            self.es.indices.delete(index = INDEX_PREFIX + str(index_seqs[i]))
 
-        if len(indexSeqs) > 0:
-            newSeq = indexSeqs[0] + 1
+        if len(index_seqs) > 0:
+            new_seq = index_seqs[0] + 1
         else:
-            newSeq = 0
+            new_seq = 0
 
-        newIndex = INDEX_PREFIX + str(newSeq)
-        self.es.indices.create(index = newIndex)
-        self.es.indices.put_mapping(index = newIndex, doc_type = "tweet", body = json.dumps(mappings))
-        print("New index %s is created."%(newIndex))
+        new_index = INDEX_PREFIX + str(new_seq)
+        self.es.indices.create(index = new_index)
+        self.es.indices.put_mapping(index = new_index, doc_type = "tweet", body = json.dumps(mappings))
+        print("New index %s is created."%(new_index))
 
         self.hour = datetime.today().hour
-        self.current_index = newIndex
+        self.current_index = new_index
         
 
     def get_instance(self):
