@@ -17,6 +17,14 @@ class TweetController extends Controller
         $lat = $request -> lat;
         $lon = $request -> lon;
         $radius = $request -> radius;
+        $filter = $request -> filter;
+
+        if (strlen($filter) > 1) {
+            $match = array("match" => ['text' => $filter]);
+        }
+        else {
+            $match = array("match_all" => []);
+        }
 
         $query = [
             'index' => 'twitter-*',
@@ -31,9 +39,7 @@ class TweetController extends Controller
 
                     "bool" => [
 
-                        "must" => [
-                            "match_all" => []
-                        ],
+                        "must" => $match,
                         "filter" => [
                             "geo_distance" => [
                                 "distance" => $radius . "mi",
@@ -62,14 +68,20 @@ class TweetController extends Controller
         $perPage = 15;
         $tweets = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
         $paginator = new LengthAwarePaginator($tweets, count($collection), $perPage);
-        $paginator -> setPath($request->url()."?lat=$lat"."&lon=$lon"."&radius=$radius");
+        
 
+        $pagePath = $request->url()."?lat=$lat"."&lon=$lon"."&radius=$radius";
+        if (strlen($filter) > 0) {
+            $pagePath = $pagePath . "&filter=$filter";
+        }
+        $paginator -> setPath($pagePath);
 
         return view("home", ["tweets"=>$paginator, 
                              "msg"=>$msg, 
                              "lat"=>$lat,
                              "lon"=>$lon,
-                             "radius"=>$radius]);
+                             "radius"=>$radius,
+                             "filter"=>$filter]);
     }
 
 

@@ -82,6 +82,8 @@
                                                   placeholder="Longitude" pattern="[-.0-9]+" value="@if(!empty($lon)){{$lon}}@endif"  required/></li>
                     <li class="coodinates radius"><input tyle="text" name="radius" id="radius" class="form-control" 
                                                          placeholder="Radius (miles)" pattern="[0-9]+" value="@if(!empty($radius)){{$radius}}@endif" required/></li>
+                    <li class="coodinates filter"><input tyle="text" name="filter" id="filter" class="form-control" style="background:#F9F9F9" 
+                                                         placeholder="Keyword Filter (optional)" pattern="[0-9a-zA-Z]*" value="@if(!empty($filter)){{$filter}}@endif"/></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
