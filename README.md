@@ -1,6 +1,6 @@
 # Tweet. Geo
 Get tweets by geographical areas (coordinates).
-You can optionally specify a filter by key workds.
+You can optionally specify a filter by key words.
 
 
 # Design
@@ -52,7 +52,7 @@ Before forwarding a new tweet, check if it is in a new hour, if so, remove indic
 ## Controller Design
 |    Controller Name           |    Description                                                     |
 |------------------------------|--------------------------------------------------------------------|
-|    HomeController.php        |    Handle the Tweets search.                                       |
+|    TweetController.php       |    Handle the Tweets search.                                       |
 
 
 
