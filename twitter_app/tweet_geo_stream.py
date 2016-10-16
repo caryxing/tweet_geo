@@ -25,7 +25,8 @@ class TweetListener(StreamListener):
             tweet_to_add = {
                 "id": tweet["id_str"], 
                 "coordinates": coordinates["coordinates"],
-                "timestamp_ms": tweet["timestamp_ms"]
+                "timestamp_ms": tweet["timestamp_ms"],
+                "text": tweet["text"]
             }
             self.es.add_tweet(json.dumps(tweet_to_add))
         return True

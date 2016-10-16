@@ -53,6 +53,9 @@ class ElasticSearchForTweets:
                     },
                     "timestamp_ms": {
                         "type": "long"
+                    },
+                    "text": {
+                        "type": "string"
                     }
                 }
             }
