@@ -55,7 +55,29 @@ class ElasticSearchForTweets:
                         "type": "long"
                     },
                     "text": {
-                        "type": "string"
+                        "type": "string",
+                        "analyzer": "tweet_analyzer"
+                    }
+                }
+            }
+        }
+
+        settings = {
+            "settings": {
+                "analysis": {
+                    "analyzer": {
+                        "tweet_analyzer": {
+                            "type": "custom",
+                            "tokenizer": "standard",
+                            "char_filter": ["transform_hashtags"],
+                            "filter": ["lowercase", "stop"]
+                        }
+                    },
+                    "char_filter" : {
+                        "transform_hashtags" : {
+                            "type" : "mapping",
+                            "mappings" : ["#=>|HHAASSHH"]
+                        }
                     }
                 }
             }
@@ -81,24 +103,22 @@ class ElasticSearchForTweets:
             new_seq = 0
 
         new_index = INDEX_PREFIX + str(new_seq)
-        self.es.indices.create(index = new_index)
+        self.es.indices.create(index = new_index, body=settings)
         self.es.indices.put_mapping(index = new_index, doc_type = "tweet", body = json.dumps(mappings))
         print("New index %s is created."%(new_index))
 
         self.hour = datetime.today().hour
         self.current_index = new_index
         
-
     def get_instance(self):
         return self.es
     
     def info(self):
         return self.es.info()
 
-
 def est_debug():
     es = ElasticSearchForTweets().get_instance()
-    #es.indices.delete("twitter*")
+    es.indices.delete("twitter*")
     #es.indices.create(index=INDEX_PREFIX+"0")
     #es.indices.put_mapping(index="twitter", doc_type="tweet", body=json.dumps(mappings))
     #json_pretty_print(es.indices.get("twitter*"))
@@ -126,5 +146,3 @@ def est_debug():
     }
     #res = es.search(index = "twitter*", body = query)
     #print("Got %d Hits:" % res['hits']['total'])
-
-

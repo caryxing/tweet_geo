@@ -20,7 +20,7 @@ class TweetController extends Controller
         $filter = $request -> filter;
 
         if (strlen($filter) > 1) {
-            $match = array("match" => ['text' => $filter]);
+            $match = array("match_phrase" => ['text' => $filter]);
         }
         else {
             $match = array("match_all" => []);
@@ -36,9 +36,7 @@ class TweetController extends Controller
             "size" => 250,
             'body' => [
                 'query' => [
-
                     "bool" => [
-
                         "must" => $match,
                         "filter" => [
                             "geo_distance" => [

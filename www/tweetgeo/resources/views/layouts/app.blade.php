@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -83,7 +85,7 @@
                     <li class="coodinates radius"><input tyle="text" name="radius" id="radius" class="form-control" 
                                                          placeholder="Radius (miles)" pattern="[0-9]+" value="@if(!empty($radius)){{$radius}}@endif" required/></li>
                     <li class="coodinates filter"><input tyle="text" name="filter" id="filter" class="form-control" style="background:#F9F9F9" 
-                                                         placeholder="Keyword Filter (optional)" pattern="[0-9a-zA-Z]*" value="@if(!empty($filter)){{$filter}}@endif"/></li>
+                                                         placeholder="Keyword Filter (optional)" value="@if(!empty($filter)){{$filter}}@endif"/></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
