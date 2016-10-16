@@ -37,7 +37,7 @@ class ElasticSearchForTweets:
 
     def add_tweet(self, tweet_body):
         if datetime.today().hour != self.hour:
-            del_old_create_new_index()
+            self.del_old_create_new_index()
         self.es.index(index=self.current_index, doc_type="tweet", body=tweet_body)
 
 
@@ -52,12 +52,17 @@ class ElasticSearchForTweets:
                         "type": "geo_point"
                     },
                     "timestamp_ms": {
-                        "type": "string"
+                        "type": "long"
                     }
                 }
             }
         }
-        indices = self.es.indices.get(INDEX_PREFIX + "*")
+
+        try:
+            indices = self.es.indices.get(INDEX_PREFIX + "*")
+        except:
+            indices = []
+            
         index_seqs = []
         for index in indices:
             index_seqs.append(int(index.split('-')[1]))
@@ -89,29 +94,12 @@ class ElasticSearchForTweets:
 
 
 def est_debug():
-    mappings = {
-        "tweet": {
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "coordinates": {
-                    "type": "geo_point"
-                },
-                "timestamp_ms": {
-                    "type": "string"
-                }
-            }
-        }
-    }
-    
     es = ElasticSearchForTweets().get_instance()
-    #es.indices.delete("twitter")
-    #es.indices.create(index=INDEX_PREFIX+"2")
+    #es.indices.delete("twitter*")
+    #es.indices.create(index=INDEX_PREFIX+"0")
     #es.indices.put_mapping(index="twitter", doc_type="tweet", body=json.dumps(mappings))
     #json_pretty_print(es.indices.get("twitter*"))
     #json_pretty_print(es.search("twitter*", body={"query": {"match_all": {}}}))
-
     query = {
         "sort" : [
             {"timestamp_ms" : "desc"}
@@ -133,16 +121,7 @@ def est_debug():
             }
         }
     }
-
     #res = es.search(index = "twitter*", body = query)
     #print("Got %d Hits:" % res['hits']['total'])
-    #for hit in res['hits']['hits']:
-    #    print("%s" % hit["_source"])
-
-
-# TODO: remove
-#est_debug()
-
-
 
 
