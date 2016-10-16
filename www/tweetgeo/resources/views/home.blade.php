@@ -31,7 +31,9 @@
      }
      window.onload = (function(){
          tweets = document.getElementsByName("tweet");
-         tweets.forEach(reveal_tweet)
+         $.each(tweets, function( index, value ) {
+             reveal_tweet(value)
+         });
      });
     </script>
 
