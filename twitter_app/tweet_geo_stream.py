@@ -28,12 +28,10 @@ class TweetListener(StreamListener):
                 "timestamp_ms": tweet["timestamp_ms"]
             }
             self.es.add_tweet(json.dumps(tweet_to_add))
-
         return True
 
     def on_error(self, status):
         print("Error: " + str(status))
-
 
 if __name__ == '__main__':
     tweet_handler = TweetListener()
@@ -50,3 +48,4 @@ if __name__ == '__main__':
 
     stream = Stream(auth, tweet_handler)
     stream.filter(locations = LOCATIONS)
+
