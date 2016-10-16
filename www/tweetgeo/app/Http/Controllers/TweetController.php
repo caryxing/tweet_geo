@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Elasticsearch\ClientBuilder;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class TweetController extends Controller
 {
@@ -14,7 +16,7 @@ class TweetController extends Controller
         
         $lat = $request -> lat;
         $lon = $request -> lon;
-        $radius = $request -> radius . "mi";
+        $radius = $request -> radius;
 
         $query = [
             'index' => 'twitter-*',
@@ -23,7 +25,7 @@ class TweetController extends Controller
                 'timestamp_ms:desc'
             ],
             "from" => 0,
-            "size" => 25,
+            "size" => 250,
             'body' => [
                 'query' => [
 
@@ -34,7 +36,7 @@ class TweetController extends Controller
                         ],
                         "filter" => [
                             "geo_distance" => [
-                                "distance" => $radius,
+                                "distance" => $radius . "mi",
                                 "coordinates" => $lat . ', ' . $lon
                             ]
                         ]
@@ -45,23 +47,33 @@ class TweetController extends Controller
 
         try {
             $response = $client->search($query);
-            $msg = "Total hits: ".$response["hits"]["total"];
-            $tweets = $response["hits"]["hits"];
-            return view("home", ["tweets"=>$tweets, 
-                                 "msg"=>$msg, 
-                                 "lat"=>$lat,
-                                 "lon"=>$lon,
-                                 "radius"=>$request->radius]);
 
         } catch (\Exception $e) {
             $msg = 'Error: '.$e->getMessage();
             return view("home", ["tweets" => [], "msg" => $msg]);
         }
-        
-        return view("home");
+
+        $showNum = min($response["hits"]["total"], 250);
+        $msg = "Total hits: ".$response["hits"]["total"].". Showing " . $showNum .".";
+        $tweets = $response["hits"]["hits"];
+
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($tweets);
+        $perPage = 15;
+        $tweets = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $paginator = new LengthAwarePaginator($tweets, count($collection), $perPage);
+        $paginator -> setPath($request->url()."?lat=$lat"."&lon=$lon"."&radius=$radius");
+
+
+        return view("home", ["tweets"=>$paginator, 
+                             "msg"=>$msg, 
+                             "lat"=>$lat,
+                             "lon"=>$lon,
+                             "radius"=>$radius]);
     }
 
+
     public function home() {
-        return view("home",  ["tweets" => [], "msg" => "Input Latitude, Longitude, and Radius above."]);
+        return view("home",  ["tweets" => [], "msg" => "Input Latitude, Longitude, and Radius above. e.g. Charlottsvile, VA: 38.031524, -78.510559"]);
     }
 }

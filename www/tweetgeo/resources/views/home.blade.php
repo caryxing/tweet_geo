@@ -10,6 +10,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script sync src="https://platform.twitter.com/widgets.js"></script>
 
+    <style>
+     .msg {
+         color: #CCC;
+     }
+    </style>
+
     <script type="text/javascript">
      function reveal_tweet(tweet) {
          var id = tweet.getAttribute("tweetID");
@@ -17,9 +23,9 @@
          twttr.widgets.createTweet(
              id, tweet,
              {
-                 conversation : 'none',
-                 cards        : 'visible',
-                 theme        : 'light'
+                 conversation: 'none',
+                 cards: 'visible',
+                 theme: 'light'
              })
 
      }
@@ -37,10 +43,12 @@
 
 <div class="content">
     <div class="container">
-        <div>{{$msg}}</div>
+        <div class="msg">{{$msg}}</div>
+        <div>@if (!empty($tweets)) {{$tweets->render()}}@endif</div>
         @foreach ($tweets as $tweet)
             <div name="tweet" tweetID="{{$tweet['_source']['id']}}"></div>
         @endforeach
+        <div>@if (!empty($tweets)) {{$tweets->render()}}@endif</div>
     </div>
 </div>
 

@@ -17,30 +17,55 @@
      }
      
      .copywrite {
-         margin-top: 20px;
+         margin-top: 30px;
          padding-top: 10px;
-         background: #97b5d0;
+         background: #222222;
+         color: #999;
+     }
+
+     html {
+         position: relative;
+         min-height: 100%;
+     }
+
+     body {
+         background: #606860;
+         margin-bottom: 60px;
      }
 
      .footer {
          position: absolute;
          bottom: 0;
          width: 100%;
+
      }
     </style>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <script>
+     function getLocation() {
+         if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(showPosition);
+         } else {
+             alert("Failed to get your location.");
+         }
+     }
+     function showPosition(position) {
+         $("#lat").val(position.coords.latitude)
+         $("#lon").val(position.coords.longitude)
+         $("#radius").val(10)
+     }
+    </script>
 
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-static-top" style="margin-bottom: 0px;">
+    <nav class="navbar navbar-default navbar-static-top" style="margin-bottom: 0px; background: #F0F0E0">
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/tweetgeo" style="color: #555;">
-                    Tweet. Geo
+                    <strong>Tweet. Geo</strong>
                 </a>
             </div>
       
@@ -51,17 +76,18 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     &nbsp;
-                    <li class="coodinates"><input tyle="text" name="lat" class="form-control" 
+                    <li class="coodinates"><input tyle="text" name="lat" id="lat" class="form-control" 
                                                   placeholder="Latitude" pattern="[-.0-9]+" value="@if(!empty($lat)){{$lat}}@endif" required/></li>
-                    <li class="coodinates"><input tyle="text" name="lon" class="form-control" 
+                    <li class="coodinates"><input tyle="text" name="lon" id="lon" class="form-control" 
                                                   placeholder="Longitude" pattern="[-.0-9]+" value="@if(!empty($lon)){{$lon}}@endif"  required/></li>
-                    <li class="coodinates radius"><input tyle="text" name="radius" class="form-control" 
+                    <li class="coodinates radius"><input tyle="text" name="radius" id="radius" class="form-control" 
                                                          placeholder="Radius (miles)" pattern="[0-9]+" value="@if(!empty($radius)){{$radius}}@endif" required/></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right" style="color: #999;">
-                    <li><button class="btn btn-primary" style="margin: 8px 5px;">SEARCH</button></li>
+                    <li><button type="button" class="btn btn-info" style="margin: 8px 5px;" onClick="getLocation(); return false;">My Location</button></li>
+                    <li><button type="submit" class="btn btn-primary" style="margin: 8px 5px;">Search</button></li>
                 </ul>
                 </form>
             </div>
@@ -71,7 +97,7 @@
     @yield('content')
     <footer class="copywrite footer">
         <div class="container">
-            <p>Copyright <a href="http://lazycrossing.com/">Lazy Crossing</a></p>
+            <p>Powered By <a href="http://lazycrossing.com/">Lazy Crossing</a></p>
         </div>
     </footer>
 
