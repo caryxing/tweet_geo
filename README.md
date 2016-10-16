@@ -43,6 +43,19 @@ Query Elastic Cloud upon requests from Web Portal.
 Save Tweets in the same hour as the same index, name them in a sequence, e.g. "twitter-0", "twitter-1".
 Before forwarding a new tweet, check if it is in a new hour, if so, remove indices that are older than 24 hours, then create a new index.
 
+## View Design
+|    View Name                |    Description                                                           |
+|-----------------------------|--------------------------------------------------------------------------|
+|    home.blade.php           |    List of the requested tweets.                                         |
+
+
+## Controller Design
+|    Controller Name           |    Description                                                     |
+|------------------------------|--------------------------------------------------------------------|
+|    HomeController.php        |    Handle the Tweets search.                                       |
+
+
+
 
 # Web UI Snapshot
 ![alt text](https://github.com/caryxing/tweet_geo/blob/master/doc/ui_snapshot.png)
